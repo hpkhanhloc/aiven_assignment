@@ -1,25 +1,37 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  ThemeProvider,
+  CssBaseline,
+} from "@material-ui/core";
+import Home from "./components/Home"
+import Search from "./components/Search"
+import SiteNavigation from './SiteNavigation';
+import { useStyles,lightTheme } from './styles';
 
-function App() {
+const App: React.FC = () => {
+  const classes = useStyles()()
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+    <ThemeProvider theme={lightTheme}>
+    <div className={classes.root}>
+          <CssBaseline />
+          <SiteNavigation />
+          <main className={classes.content}>
+          <div className={classes.toolBar} />
+          <Switch>
+        <Route exact path="/">
+          <Home />
+        </Route>
+        <Route exact path="/search">
+          <Search />
+        </Route>
+      </Switch>
+          </main>
+      </div>
+    </ThemeProvider>      
+    </Router>
   );
 }
 
