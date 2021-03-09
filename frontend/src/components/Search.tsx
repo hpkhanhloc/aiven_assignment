@@ -14,6 +14,8 @@ import {
   SortDirection,
   TableBody,
   TablePagination,
+  Button,
+  Snackbar,
 } from "@material-ui/core";
 import { COLUMNS } from "../constants";
 import { Cloud } from "../types";
@@ -34,6 +36,9 @@ const Search: React.FC = () => {
   const [orderBy, setOrderBy] = useState<keyof Cloud>("cloud_name");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
+  const [open, setOpen] = useState<boolean>(false);
+  const [cloudSelected, setCloudSelected] = useState<Cloud>();
+  const [message, setMessage] = useState<string>();
   const classes = useStyles()();
 
   useEffect(() => {
@@ -120,9 +125,23 @@ const Search: React.FC = () => {
               </TableSortLabel>
             </TableCell>
           ))}
+          <TableCell />
         </TableRow>
       </TableHead>
     );
+  };
+
+  const handleSelectCloud = (row: Cloud) => {
+    setMessage(`Selected ${row.cloud_name}`);
+    setOpen(true);
+    setCloudSelected(row);
+  };
+
+  const handleClose = (event: any, reason: any) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
   };
 
   return (
@@ -164,6 +183,15 @@ const Search: React.FC = () => {
                             <TableCell align="center">
                               {row.geo_region}
                             </TableCell>
+                            <TableCell>
+                              <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={() => handleSelectCloud(row)}
+                              >
+                                Select
+                              </Button>
+                            </TableCell>
                           </TableRow>
                         );
                       })}
@@ -184,6 +212,13 @@ const Search: React.FC = () => {
             )}
           </Box>
         )}
+        <Snackbar
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          open={open}
+          autoHideDuration={4000}
+          onClose={handleClose}
+          message={message}
+        ></Snackbar>
       </Paper>
     </Container>
   );
