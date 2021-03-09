@@ -29,6 +29,7 @@ interface EnhancedTableHeader {
 const Search: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<Array<Cloud>>([]);
+  const [filteredData, setFilteredData] = useState<Array<Cloud>>([]);
   const [order, setOrder] = useState<SortDirection>("asc");
   const [orderBy, setOrderBy] = useState<keyof Cloud>("cloud_name");
   const [page, setPage] = useState<number>(0);
@@ -51,7 +52,7 @@ const Search: React.FC = () => {
     getCloudData();
   }, []);
 
-  const handleChangePage = (newPage: number) => {
+  const handleChangePage = (event: any, newPage: number) => {
     setPage(newPage);
   };
 
@@ -126,7 +127,7 @@ const Search: React.FC = () => {
 
   return (
     <Container>
-      <SearchController />
+      <SearchController data={data} setFilteredData={setFilteredData} />
       <Paper>
         {loading ? (
           <Box mt={2} p={2} display="flex" justifyContent="center">
@@ -141,16 +142,16 @@ const Search: React.FC = () => {
                   orderBy={orderBy}
                   onRequestSort={handleRequestSort}
                 />
-                {data && (
+                {filteredData && (
                   <TableBody>
-                    {stableSort(data, getComparator(order, orderBy))
+                    {stableSort(filteredData, getComparator(order, orderBy))
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
                       .map((row) => {
                         return (
-                          <TableRow key={data.indexOf(row)}>
+                          <TableRow key={filteredData.indexOf(row)}>
                             <TableCell>{row.cloud_name}</TableCell>
                             <TableCell>{row.cloud_provider}</TableCell>
                             <TableCell>{row.cloud_description}</TableCell>
@@ -170,14 +171,14 @@ const Search: React.FC = () => {
                 )}
               </Table>
             </TableContainer>
-            {data && (
+            {filteredData && (
               <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={data.length}
+                count={filteredData.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
-                onChangePage={() => handleChangePage}
+                onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}
               />
             )}
