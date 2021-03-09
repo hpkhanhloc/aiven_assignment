@@ -9,7 +9,7 @@ const useStyles = () => {
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
       position: "fixed",
-      background: "#FFFFFF",
+      background: theme.palette.primary.light,
     },
     drawer: {
       width: drawerWidth,
@@ -54,6 +54,12 @@ const useStyles = () => {
     navigationButton: {
       justifyContent: "flex-start",
       margin: theme.spacing(1),
+    },
+    tableHead: {
+      head: {
+        backgroundColor: "black",
+        color: "white",
+      },
     },
   }));
 };
